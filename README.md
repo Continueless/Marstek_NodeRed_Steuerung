@@ -1,4 +1,4 @@
-# Marstek_NodeRed_Steuerung
+# Marstek NodeRed Steuerung
 
 Steuert Marstek Speichr insbesondere wenn man mehr als nur einen Spericher hat. Dies ist die einzige möglichkeit praktisch Verlustfrei mehere Marstek Speicher zu steuern. Theoretisch kann man so unendlich viele Marstek Speicher an nur einem zähler mit nur einem einzigen Meßgerät steuern.
 
