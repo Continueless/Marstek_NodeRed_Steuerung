@@ -1,0 +1,481 @@
+[
+    {
+        "id": "deef995420c266bf",
+        "type": "inject",
+        "z": "cfaf1a21de7d1944",
+        "name": "",
+        "props": [],
+        "repeat": "4",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 490,
+        "y": 240,
+        "wires": [
+            [
+                "fa0ae16d6c1eb775"
+            ]
+        ]
+    },
+    {
+        "id": "fa0ae16d6c1eb775",
+        "type": "function",
+        "z": "cfaf1a21de7d1944",
+        "name": "Abfrage Register",
+        "func": "msg.payload = { value: msg.payload, 'fc': 3, 'unitid': 1, 'address': 32104 , 'quantity': 1 }\nmsg.topic = \"speicher1.soc\"\nnode.send([msg,null])\n\nmsg.payload = { value: 0, 'fc': 3, 'unitid': 1, 'address': 32200 , 'quantity': 5 }\nmsg.topic = \"speicher1.acpower\"\nnode.send([msg,null])\n\nmsg.payload = { value: msg.payload, 'fc': 3, 'unitid': 1, 'address': 35100 , 'quantity': 1 }\nmsg.topic = \"speicher1.inverterstate\"\nnode.send([msg,null])\n\nmsg.payload = { value: msg.payload, 'fc': 3, 'unitid': 1, 'address': 42000 , 'quantity': 1 }\nmsg.topic = \"speicher1.rs485\"\nnode.send([msg,null])\n\nmsg.payload = { value: msg.payload, 'fc': 3, 'unitid': 1, 'address': 42010 , 'quantity': 1 }\nmsg.topic = \"speicher1.forcemode\"\nnode.send([msg,null])\n\nmsg.payload = { value: msg.payload, 'fc': 3, 'unitid': 1, 'address': 35000 , 'quantity': 1 }\nmsg.topic = \"speicher1.temp\"\nnode.send([msg,null])\n\nmsg.payload = { value: msg.payload, 'fc': 3, 'unitid': 1, 'address': 32104 , 'quantity': 1 }\nmsg.topic = \"speicher2.soc\"\nnode.send([null,msg])\n\nmsg.payload = { value: msg.payload, 'fc': 3, 'unitid': 1, 'address': 32200 , 'quantity': 5 }\nmsg.topic = \"speicher2.acpower\"\nnode.send([null,msg])\n\nmsg.payload = { value: msg.payload, 'fc': 3, 'unitid': 1, 'address': 35100 , 'quantity': 1 }\nmsg.topic = \"speicher2.inverterstate\"\nnode.send([null,msg])\n\nmsg.payload = { value: msg.payload, 'fc': 3, 'unitid': 1, 'address': 42000 , 'quantity': 1 }\nmsg.topic = \"speicher2.rs485\"\nnode.send([null,msg])\n\nmsg.payload = { value: msg.payload, 'fc': 3, 'unitid': 1, 'address': 42010 , 'quantity': 1 }\nmsg.topic = \"speicher2.forcemode\"\nnode.send([null,msg])\n\nmsg.payload = { value: msg.payload, 'fc': 3, 'unitid': 1, 'address': 35000 , 'quantity': 1 }\nmsg.topic = \"speicher2.temp\"\nnode.send([null,msg])\n\n//flow.set(\"speicher1.acpower\",100)\n//return msg;",
+        "outputs": 2,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 750,
+        "y": 240,
+        "wires": [
+            [
+                "2fcaebf80e645724"
+            ],
+            [
+                "3919c8aee56a5c80"
+            ]
+        ]
+    },
+    {
+        "id": "3919c8aee56a5c80",
+        "type": "modbus-flex-getter",
+        "z": "cfaf1a21de7d1944",
+        "name": "Modbus Read",
+        "showStatusActivities": true,
+        "showErrors": false,
+        "showWarnings": false,
+        "logIOActivities": false,
+        "server": "8e7f059c5de3dd77",
+        "useIOFile": false,
+        "ioFile": "",
+        "useIOForPayload": false,
+        "emptyMsgOnFail": false,
+        "keepMsgProperties": false,
+        "delayOnStart": false,
+        "enableDeformedMessages": false,
+        "startDelayTime": "",
+        "x": 1000,
+        "y": 260,
+        "wires": [
+            [
+                "8ae2e97905a5e3e3"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "8ae2e97905a5e3e3",
+        "type": "function",
+        "z": "cfaf1a21de7d1944",
+        "name": "Speichern Werte",
+        "func": "if (msg.topic == \"speicher1.acpower\" || msg.topic == \"speicher2.acpower\") {\n    if (msg.payload[3] > 32767) {\n        msg.payload[3] = msg.payload[3] - 65536;\n    }\n    global.set(msg.topic,msg.payload[3])\n}\n\n\nelse { global.set(msg.topic,msg.payload[0]) }\nreturn null;",
+        "outputs": 2,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1210,
+        "y": 220,
+        "wires": [
+            [],
+            []
+        ]
+    },
+    {
+        "id": "2fcaebf80e645724",
+        "type": "modbus-flex-getter",
+        "z": "cfaf1a21de7d1944",
+        "name": "Modbus Read",
+        "showStatusActivities": true,
+        "showErrors": false,
+        "showWarnings": false,
+        "logIOActivities": false,
+        "server": "3d98717ebf931690",
+        "useIOFile": false,
+        "ioFile": "",
+        "useIOForPayload": false,
+        "emptyMsgOnFail": false,
+        "keepMsgProperties": false,
+        "delayOnStart": false,
+        "enableDeformedMessages": false,
+        "startDelayTime": "",
+        "x": 1000,
+        "y": 200,
+        "wires": [
+            [
+                "8ae2e97905a5e3e3"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "924270d449dd41aa",
+        "type": "inject",
+        "z": "cfaf1a21de7d1944",
+        "name": "",
+        "props": [],
+        "repeat": "3",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 490,
+        "y": 300,
+        "wires": [
+            [
+                "9554cbcd805aa30d"
+            ]
+        ]
+    },
+    {
+        "id": "9554cbcd805aa30d",
+        "type": "function",
+        "z": "cfaf1a21de7d1944",
+        "name": "Abfrage RS485",
+        "func": "if (global.get(\"speicher1.rs485\") == 21947) {\n    msg.payload = { value: 21930, 'fc': 6, 'unitid': 1, 'address': 42000, 'quantity': 1 }\n    node.send([msg,null])\n}\nif (global.get(\"speicher2.rs485\") == 21947) {\n    msg.payload = { value: 21930, 'fc': 6, 'unitid': 1, 'address': 42000 , 'quantity': 1 }\n    node.send ([null,msg])\n}\nreturn null;",
+        "outputs": 2,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 760,
+        "y": 300,
+        "wires": [
+            [
+                "62dae48c0287cfe1"
+            ],
+            [
+                "0d673b491f1dbdc6"
+            ]
+        ]
+    },
+    {
+        "id": "0d673b491f1dbdc6",
+        "type": "modbus-flex-write",
+        "z": "cfaf1a21de7d1944",
+        "name": "",
+        "showStatusActivities": false,
+        "showErrors": false,
+        "showWarnings": true,
+        "server": "8e7f059c5de3dd77",
+        "emptyMsgOnFail": false,
+        "keepMsgProperties": false,
+        "delayOnStart": false,
+        "startDelayTime": "",
+        "x": 1130,
+        "y": 400,
+        "wires": [
+            [],
+            []
+        ]
+    },
+    {
+        "id": "62dae48c0287cfe1",
+        "type": "modbus-flex-write",
+        "z": "cfaf1a21de7d1944",
+        "name": "",
+        "showStatusActivities": false,
+        "showErrors": false,
+        "showWarnings": true,
+        "server": "3d98717ebf931690",
+        "emptyMsgOnFail": false,
+        "keepMsgProperties": false,
+        "delayOnStart": false,
+        "startDelayTime": "",
+        "x": 1130,
+        "y": 340,
+        "wires": [
+            [],
+            []
+        ]
+    },
+    {
+        "id": "856e653cf7cff350",
+        "type": "function",
+        "z": "cfaf1a21de7d1944",
+        "name": "Charge Ladewert setzen",
+        "func": "msg.payload = { value: msg.ladewert1, 'fc': 6, 'unitid': 1, 'address': 42020, 'quantity': 1 }\nnode.send([msg, null])\nmsg.payload = { value: msg.ladewert2, 'fc': 6, 'unitid': 1, 'address': 42020, 'quantity': 1 }\nnode.send([null,msg])\n\nif (global.get(\"speicher1.forcemode\") != 1) {\nmsg.payload = { value: 1, 'fc': 6, 'unitid': 1, 'address': 42010, 'quantity': 1 }\nnode.send([msg, null])\n}\nif (global.get(\"speicher2.forcemode\") != 1) {\nmsg.payload = { value: 1, 'fc': 6, 'unitid': 1, 'address': 42010, 'quantity': 1 }\nnode.send([null,msg])\n}\nreturn null;",
+        "outputs": 2,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 730,
+        "y": 360,
+        "wires": [
+            [
+                "62dae48c0287cfe1"
+            ],
+            [
+                "0d673b491f1dbdc6"
+            ]
+        ]
+    },
+    {
+        "id": "ffe860afa23faff1",
+        "type": "function",
+        "z": "cfaf1a21de7d1944",
+        "name": "Discharge Ladewert setzen",
+        "func": "msg.payload = { value: msg.ladewert1, 'fc': 6, 'unitid': 1, 'address': 42021, 'quantity': 1 }\nnode.send([msg, null])\nmsg.payload = { value: msg.ladewert2, 'fc': 6, 'unitid': 1, 'address': 42021, 'quantity': 1 }\nnode.send([null,msg])\n\nif (global.get(\"speicher1.forcemode\") != 2) {\nmsg.payload = { value: 2, 'fc': 6, 'unitid': 1, 'address': 42010, 'quantity': 1 }\nnode.send([msg, null])\n}\nif (global.get(\"speicher2.forcemode\") != 2) {\nmsg.payload = { value: 2, 'fc': 6, 'unitid': 1, 'address': 42010, 'quantity': 1 }\nnode.send([null,msg])\n}\nreturn null;",
+        "outputs": 2,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 720,
+        "y": 420,
+        "wires": [
+            [
+                "62dae48c0287cfe1"
+            ],
+            [
+                "0d673b491f1dbdc6"
+            ]
+        ]
+    },
+    {
+        "id": "378efbc5d75f3aa0",
+        "type": "inject",
+        "z": "cfaf1a21de7d1944",
+        "name": "",
+        "props": [
+            {
+                "p": "ladewert1",
+                "v": "100",
+                "vt": "num"
+            },
+            {
+                "p": "ladewert2",
+                "v": "100",
+                "vt": "num"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 490,
+        "y": 360,
+        "wires": [
+            [
+                "856e653cf7cff350"
+            ]
+        ]
+    },
+    {
+        "id": "8bc72c19d1ddb07f",
+        "type": "inject",
+        "z": "cfaf1a21de7d1944",
+        "name": "",
+        "props": [
+            {
+                "p": "ladewert1",
+                "v": "50",
+                "vt": "num"
+            },
+            {
+                "p": "ladewert2",
+                "v": "50",
+                "vt": "num"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 490,
+        "y": 420,
+        "wires": [
+            [
+                "ffe860afa23faff1"
+            ]
+        ]
+    },
+    {
+        "id": "eb3e7319c1103ca6",
+        "type": "function",
+        "z": "cfaf1a21de7d1944",
+        "name": "Standby setzen",
+        "func": "if (global.get(\"speicher1.forcemode\") != 0) {\nmsg.payload = { value: 0, 'fc': 6, 'unitid': 1, 'address': 42010, 'quantity': 1 }\nnode.send([msg, null])\n}\nif (global.get(\"speicher2.forcemode\") != 0) {\nmsg.payload = { value: 0, 'fc': 6, 'unitid': 1, 'address': 42010, 'quantity': 1 }\nnode.send([null,msg])\n}\nreturn null;",
+        "outputs": 2,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 760,
+        "y": 480,
+        "wires": [
+            [
+                "62dae48c0287cfe1"
+            ],
+            [
+                "0d673b491f1dbdc6"
+            ]
+        ]
+    },
+    {
+        "id": "22611b19bdc01dfc",
+        "type": "inject",
+        "z": "cfaf1a21de7d1944",
+        "name": "",
+        "props": [
+            {
+                "p": "ladewert1",
+                "v": "100",
+                "vt": "num"
+            },
+            {
+                "p": "ladewert2",
+                "v": "100",
+                "vt": "num"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 490,
+        "y": 480,
+        "wires": [
+            [
+                "eb3e7319c1103ca6"
+            ]
+        ]
+    },
+    {
+        "id": "dc90017a76a39f1e",
+        "type": "function",
+        "z": "cfaf1a21de7d1944",
+        "name": "Steuerlogik 2 Speicher",
+        "func": "var speicher_eauto = global.get('homeassistant.homeAssistant.states[\"input_boolean.marstek_speicher_eauto_einbeziehen\"].state')\nvar aktueller_verbrauch = parseInt(global.get('homeassistant.homeAssistant.states[\"input_number.bereinigter_stromverbrauch\"].state'))\n\nvar speicher1_ac_verbrauch = (global.get(\"speicher1.acpower\"))\nvar speicher2_ac_verbrauch = (global.get(\"speicher2.acpower\"))\nvar speicher1_fullstand = (global.get(\"speicher1.soc\"))\nvar speicher2_fullstand = (global.get(\"speicher2.soc\"))\nvar speicher1_forcemode = (global.get(\"speicher1.forcemode\"))\nvar speicher2_forcemode = (global.get(\"speicher2.forcemode\"))\n\nvar wallbox_verbrauch = parseInt(global.get('homeassistant.homeAssistant.states[\"sensor.go_echarger_277532_nrg_12\"].state'))\nvar wallbox_maxcurrent = parseInt(global.get('homeassistant.homeAssistant.states[\"sensor.go_echarger_277532_acu\"].state'))\nvar real_verbrauch = aktueller_verbrauch + wallbox_verbrauch\nvar akt_verbrauch_speicher = aktueller_verbrauch + speicher1_ac_verbrauch + speicher2_ac_verbrauch\n\nif (akt_verbrauch_speicher < 0) { //den Speicher laden\n    if (speicher1_fullstand < 100 || speicher2_fullstand < 100 ) {\n            if (speicher1_fullstand < 100 && speicher2_fullstand < 100) {\n                msg.ladewert1 = akt_verbrauch_speicher /-2\n                msg.ladewert2 = akt_verbrauch_speicher /-2\n                if (msg.ladewert1 > 2500) { msg.ladewert1 = 2500 }\n                if (msg.ladewert2 > 2500) { msg.ladewert2 = 2500 }\n                return [msg,null,null]\n            }\n            if (speicher1_fullstand < 100) {\n                msg.ladewert1 = akt_verbrauch_speicher /-1\n                msg.ladewert2 = 0\n                if (msg.ladewert1 > 2500) { msg.ladewert1 = 2500 }\n                return [msg,null,null]\n            }\n            if (speicher2_fullstand < 100) {\n                msg.ladewert1 = 0\n                msg.ladewert2 = akt_verbrauch_speicher /-1\n                if (msg.ladewert2 > 2500) { msg.ladewert2 = 2500 }\n                return [msg,null,null]\n            }\n    }\n }\n else {\n    if (akt_verbrauch_speicher > 0) { // den Speicher entladen\n        if (speicher1_fullstand > 12 || speicher2_fullstand > 12 ) {\n            if (speicher1_fullstand > 12 && speicher2_fullstand > 12) {\n                msg.ladewert1 = akt_verbrauch_speicher /2\n                msg.ladewert2 = akt_verbrauch_speicher /2\n                if (msg.ladewert1 > 2500) { msg.ladewert1 = 2500 }\n                if (msg.ladewert2 > 2500) { msg.ladewert2 = 2500 }\n                if (wallbox_verbrauch < 900 || speicher_eauto != \"off\") {\n                    node.send([null,msg,null])\n                }\n                return null\n            }\n            if (speicher1_fullstand > 12) {\n                msg.ladewert1 = akt_verbrauch_speicher\n                msg.ladewert2 = 0\n                if (msg.ladewert1 > 2500) { msg.ladewert1 = 2500 }\n                if (wallbox_verbrauch < 900 || speicher_eauto != \"off\") {\n                    node.send([null,msg,null])\n                }\n                return null\n            }\n            if (speicher2_fullstand > 12) {\n                msg.ladewert1 = 0\n                msg.ladewert2 = akt_verbrauch_speicher\n                if (msg.ladewert2 > 2500) { msg.ladewert2 = 2500 }\n                if (wallbox_verbrauch < 900 || speicher_eauto != \"off\") {\n                    node.send([null,msg,null])\n                }\n                return null\n            }\n        }\n    }\n}\nreturn [null,null,msg];",
+        "outputs": 3,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 280,
+        "y": 220,
+        "wires": [
+            [
+                "856e653cf7cff350"
+            ],
+            [
+                "ffe860afa23faff1"
+            ],
+            [
+                "eb3e7319c1103ca6"
+            ]
+        ]
+    },
+    {
+        "id": "fd787baae445bffa",
+        "type": "inject",
+        "z": "cfaf1a21de7d1944",
+        "name": "",
+        "props": [],
+        "repeat": "4",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 70,
+        "y": 220,
+        "wires": [
+            [
+                "dc90017a76a39f1e"
+            ]
+        ]
+    },
+    {
+        "id": "1902719b70c0027a",
+        "type": "comment",
+        "z": "cfaf1a21de7d1944",
+        "name": "Programmiert von: Gene Geue\\nRelease Date: 03.03.2026\\nBeschreinung: dies ist ein Beispielprojekt zur Steuerung von Marstek Speichern per Node-Red\\nEinzelne Werte müssen in \"Steuerlogik 2 Speicher\" angepasst werden.",
+        "info": "Programmiert von: Gene Geue\nRelease Date: 03.03.2026\nBeschreinung:\ndies ist ein Beispielprojekt zur Steuerung von Marstek Speichern per Node-Red\nEinzelne Werte müssen in \"Steuerlogik 2 Speicher\" angepasst werden.\n",
+        "x": 820,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "8e7f059c5de3dd77",
+        "type": "modbus-client",
+        "name": "Marstek Speicher 2",
+        "clienttype": "tcp",
+        "bufferCommands": true,
+        "stateLogEnabled": false,
+        "queueLogEnabled": false,
+        "failureLogEnabled": true,
+        "tcpHost": "192.168.1.130",
+        "tcpPort": 502,
+        "tcpType": "DEFAULT",
+        "serialPort": "/dev/ttyUSB",
+        "serialType": "RTU-BUFFERD",
+        "serialBaudrate": 9600,
+        "serialDatabits": 8,
+        "serialStopbits": 1,
+        "serialParity": "none",
+        "serialConnectionDelay": 100,
+        "serialAsciiResponseStartDelimiter": "0x3A",
+        "unit_id": 1,
+        "commandDelay": 1,
+        "clientTimeout": 1000,
+        "reconnectOnTimeout": true,
+        "reconnectTimeout": 2000,
+        "parallelUnitIdsAllowed": true,
+        "showErrors": false,
+        "showWarnings": true,
+        "showLogs": true
+    },
+    {
+        "id": "3d98717ebf931690",
+        "type": "modbus-client",
+        "name": "Marstek Speicher 1",
+        "clienttype": "tcp",
+        "bufferCommands": true,
+        "stateLogEnabled": false,
+        "queueLogEnabled": false,
+        "failureLogEnabled": true,
+        "tcpHost": "192.168.1.127",
+        "tcpPort": 502,
+        "tcpType": "DEFAULT",
+        "serialPort": "/dev/ttyUSB",
+        "serialType": "RTU-BUFFERD",
+        "serialBaudrate": 9600,
+        "serialDatabits": 8,
+        "serialStopbits": 1,
+        "serialParity": "none",
+        "serialConnectionDelay": 100,
+        "serialAsciiResponseStartDelimiter": "0x3A",
+        "unit_id": 1,
+        "commandDelay": 1,
+        "clientTimeout": 1000,
+        "reconnectOnTimeout": true,
+        "reconnectTimeout": 2000,
+        "parallelUnitIdsAllowed": true,
+        "showErrors": false,
+        "showWarnings": true,
+        "showLogs": true
+    },
+    {
+        "id": "6a9c0d4db8a624c0",
+        "type": "global-config",
+        "env": [],
+        "modules": {
+            "node-red-contrib-modbus": "5.45.2"
+        }
+    }
+]
